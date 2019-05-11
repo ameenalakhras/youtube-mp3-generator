@@ -27,6 +27,7 @@ SECRET_KEY = '21itija)lvu33=%%4$nr8$9%av&2vum0f!o7v8t5#^7d#*8fn!'
 DEBUG = True
 website_name=" youtube-service"
 logging_type = "file" # it can be "cmd" or "file"
+database_status = "global" # it can be "local" or "global" or "default"
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -90,13 +91,39 @@ WSGI_APPLICATION = 'youtubeService.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
+
+
+if database_status is "local":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['NAME'],#database
+            'USER': os.environ['USER'],
+            'PASSWORD': os.environ['PASSWORD'],
+            'HOST': os.environ['HOST'],
+            'PORT': os.environ['PORT'],
+        }
+    }
+
+elif database_status is "global":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['GLOABAL_NAME'],#database
+            'USER': os.environ['GLOABAL_USER'],
+            'PASSWORD': os.environ['GLOABAL_PASSWORD'],
+            'HOST': os.environ['GLOABAL_HOST'],
+            'PORT': os.environ['GLOABAL_PORT'],
+        }
+    }
+
+else:
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
